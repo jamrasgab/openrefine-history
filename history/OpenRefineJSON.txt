@@ -1,0 +1,286 @@
+[
+  {
+    "op": "core/multivalued-cell-split",
+    "columnName": "Authors",
+    "keyColumnName": "Title",
+    "mode": "separator",
+    "separator": "|",
+    "regex": false,
+    "description": "Split multi-valued cells in column Authors"
+  },
+  {
+    "op": "core/multivalued-cell-join",
+    "columnName": "Authors",
+    "keyColumnName": "Title",
+    "separator": "|",
+    "description": "Join multi-valued cells in column Authors"
+  },
+  {
+    "op": "core/mass-edit",
+    "engineConfig": {
+      "facets": [],
+      "mode": "row-based"
+    },
+    "columnName": "Language",
+    "expression": "value",
+    "edits": [
+      {
+        "from": [
+          "English"
+        ],
+        "fromBlank": false,
+        "fromError": false,
+        "to": "EN"
+      }
+    ],
+    "description": "Mass edit cells in column Language"
+  },
+  {
+    "op": "core/multivalued-cell-split",
+    "columnName": "Authors",
+    "keyColumnName": "Title",
+    "mode": "separator",
+    "separator": "|",
+    "regex": false,
+    "description": "Split multi-valued cells in column Authors"
+  },
+  {
+    "op": "core/text-transform",
+    "engineConfig": {
+      "facets": [],
+      "mode": "row-based"
+    },
+    "columnName": "Publisher",
+    "expression": "value.trim()",
+    "onError": "keep-original",
+    "repeat": false,
+    "repeatCount": 10,
+    "description": "Text transform on cells in column Publisher using expression value.trim()"
+  },
+  {
+    "op": "core/text-transform",
+    "engineConfig": {
+      "facets": [
+        {
+          "type": "list",
+          "name": "Publisher",
+          "expression": "value",
+          "columnName": "Publisher",
+          "invert": false,
+          "omitBlank": false,
+          "omitError": false,
+          "selection": [
+            {
+              "v": {
+                "v": "Akshantala Enterprises",
+                "l": "Akshantala Enterprises"
+              }
+            },
+            {
+              "v": {
+                "v": "Society of Pharmaceutical Technocrats",
+                "l": "Society of Pharmaceutical Technocrats"
+              }
+            }
+          ],
+          "selectBlank": false,
+          "selectError": false
+        }
+      ],
+      "mode": "row-based"
+    },
+    "columnName": "Title",
+    "expression": "grel:value.toTitlecase()",
+    "onError": "keep-original",
+    "repeat": false,
+    "repeatCount": 10,
+    "description": "Text transform on cells in column Title using expression grel:value.toTitlecase()"
+  },
+  {
+    "op": "core/text-transform",
+    "engineConfig": {
+      "facets": [],
+      "mode": "row-based"
+    },
+    "columnName": "Date",
+    "expression": "grel:value.toDate(\"dd/MM/yyyy\")",
+    "onError": "keep-original",
+    "repeat": false,
+    "repeatCount": 10,
+    "description": "Text transform on cells in column Date using expression grel:value.toDate(\"dd/MM/yyyy\")"
+  },
+  {
+    "op": "core/column-addition",
+    "engineConfig": {
+      "facets": [],
+      "mode": "row-based"
+    },
+    "baseColumnName": "Date",
+    "expression": "grel:value.toString(\"dd MMMM yyyy\")",
+    "onError": "set-to-blank",
+    "newColumnName": "Date 2",
+    "columnInsertIndex": 5,
+    "description": "Create column Date 2 at index 5 based on column Date using expression grel:value.toString(\"dd MMMM yyyy\")"
+  },
+  {
+    "op": "core/text-transform",
+    "engineConfig": {
+      "facets": [
+        {
+          "type": "list",
+          "name": "Authors",
+          "expression": "grel:value.contains(\",\").toString()",
+          "columnName": "Authors",
+          "invert": false,
+          "omitBlank": false,
+          "omitError": false,
+          "selection": [
+            {
+              "v": {
+                "v": "true",
+                "l": "true"
+              }
+            }
+          ],
+          "selectBlank": false,
+          "selectError": false
+        }
+      ],
+      "mode": "row-based"
+    },
+    "columnName": "Authors",
+    "expression": "grel:value.(/(.*),(.*)/).reverse().join(\" \")",
+    "onError": "keep-original",
+    "repeat": false,
+    "repeatCount": 10,
+    "description": "Text transform on cells in column Authors using expression grel:value.(/(.*),(.*)/).reverse().join(\" \")"
+  },
+  {
+    "op": "core/text-transform",
+    "engineConfig": {
+      "facets": [
+        {
+          "type": "list",
+          "name": "Authors",
+          "expression": "grel:value.contains(\",\").toString()",
+          "columnName": "Authors",
+          "invert": false,
+          "omitBlank": false,
+          "omitError": false,
+          "selection": [
+            {
+              "v": {
+                "v": "true",
+                "l": "true"
+              }
+            }
+          ],
+          "selectBlank": false,
+          "selectError": false
+        }
+      ],
+      "mode": "row-based"
+    },
+    "columnName": "Authors",
+    "expression": "grel:value.match(/(.*),(.*)/).reverse().join(\" \")",
+    "onError": "keep-original",
+    "repeat": false,
+    "repeatCount": 10,
+    "description": "Text transform on cells in column Authors using expression grel:value.match(/(.*),(.*)/).reverse().join(\" \")"
+  },
+  {
+    "op": "core/recon",
+    "engineConfig": {
+      "facets": [],
+      "mode": "record-based"
+    },
+    "columnName": "Publisher",
+    "config": {
+      "mode": "standard-service",
+      "service": "http://refine.codefork.com/reconcile/viaf",
+      "identifierSpace": "http://rdf.freebase.com/ns/user/hangy/viaf",
+      "schemaSpace": "http://rdf.freebase.com/ns/type.object.id",
+      "type": {
+        "id": "/organization/organization",
+        "name": "Corporate Name"
+      },
+      "autoMatch": false,
+      "columnDetails": [],
+      "limit": 0
+    },
+    "description": "Reconcile cells in column Publisher to type /organization/organization"
+  },
+  {
+    "op": "core/recon-judge-similar-cells",
+    "engineConfig": {
+      "facets": [
+        {
+          "type": "list",
+          "name": "Publisher",
+          "expression": "value",
+          "columnName": "Publisher",
+          "invert": false,
+          "omitBlank": false,
+          "omitError": false,
+          "selection": [
+            {
+              "v": {
+                "v": "International Union of Crystallography",
+                "l": "International Union of Crystallography"
+              }
+            }
+          ],
+          "selectBlank": false,
+          "selectError": false
+        }
+      ],
+      "mode": "record-based"
+    },
+    "columnName": "Publisher",
+    "similarValue": "International Union of Crystallography",
+    "judgment": "matched",
+    "match": {
+      "id": "158070937",
+      "name": "International Union of Crystallography.",
+      "types": [
+        "/organization/organization"
+      ],
+      "score": 0.9743589743589743
+    },
+    "shareNewTopics": false,
+    "description": "Match item International Union of Crystallography. (158070937) for cells containing \"International Union of Crystallography\" in column Publisher"
+  },
+  {
+    "op": "core/column-addition",
+    "engineConfig": {
+      "facets": [
+        {
+          "type": "list",
+          "name": "Publisher",
+          "expression": "value",
+          "columnName": "Publisher",
+          "invert": false,
+          "omitBlank": false,
+          "omitError": false,
+          "selection": [
+            {
+              "v": {
+                "v": "International Union of Crystallography",
+                "l": "International Union of Crystallography"
+              }
+            }
+          ],
+          "selectBlank": false,
+          "selectError": false
+        }
+      ],
+      "mode": "record-based"
+    },
+    "baseColumnName": "Publisher",
+    "expression": "grel:cell.recon.match.id",
+    "onError": "set-to-blank",
+    "newColumnName": "VIAF ID",
+    "columnInsertIndex": 10,
+    "description": "Create column VIAF ID at index 10 based on column Publisher using expression grel:cell.recon.match.id"
+  }
+]
